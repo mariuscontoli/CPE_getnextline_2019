@@ -69,22 +69,3 @@ char *get_next_line(const int fd)
     else
         return (src);
 }
-
-int	main(int argc, char **argv)
-{
-  int	fd;
-  char	*s;
-
-  if (argc != 2)
-    exit (0);
-  if ((fd = open(argv[1], O_RDONLY)) == -1)
-    exit (0);
-  while ((s = get_next_line(fd)) != NULL)
-    {
-      my_putstr(s);
-      my_putchar('\n');
-      free(s);
-    }
-  close(fd);
-  return (0);
-}
