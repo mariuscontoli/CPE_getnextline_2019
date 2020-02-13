@@ -5,14 +5,7 @@
 ** main file 
 */
 
-#define READ_SIZE (15)
-
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <string.h>
+#include "get_next_line.h"
 
 char *my_strncpy(char *dest, char const *src, int n)
 {
