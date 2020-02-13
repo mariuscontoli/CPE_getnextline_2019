@@ -5,67 +5,73 @@
 ** main file 
 */
 
-#include "include/get_next_line.h"
+#define READ_SIZE (15)
 
-void my_putchar(char c)
-{
-    write(1, &c, 1);
-}
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <string.h>
 
-int my_putstr(char const *str)
+char *my_strncpy(char *dest, char const *src, int n)
 {
-    int i = 0;
-    while (str[i] != '\0') {
-        my_putchar(str[i]);
-        ++i;
+    int copy = 0;
+
+    while (src[copy] != '\0' && copy < n) {
+        dest[copy] = src[copy];
+        copy++;
     }
+    if (n < copy)
+        dest[copy] = '\0';
+    return dest;
 }
 
-int my_strlen(char const *str)
+static char *my_realloc(char *str, int index, int *static_begin, char *buffer)
 {
+    char *new = malloc(sizeof(*new) * 10000);
+    char *empty = "";
+    int length = 0;
     int i = 0;
-    while (str[i] != '\0') {
-        ++i;
+
+    if (!str) {
+        length = 0;
+        my_strncpy(new, empty, length);
+    } else {
+        while (str[i] != '\0')
+            i++;
+        length = i;
+        my_strncpy(new, str, length);
     }
-    return i;
-}
-
-char	*my_strcat(char *dest, char *src)
-{
-	int len;
-	int i;
-
-	len = my_strlen(dest);
-	i = 0;
-	while (src[i])
-		dest[len + i] = src[i++];
-	dest[len + i] = '\0';
-	return (dest);
+    new[length + index] = '\0';
+    my_strncpy(new + length, buffer + (*static_begin), index);
+    *static_begin += (index + 1);
+    return new;
 }
 
 char *get_next_line(const int fd)
 {
     static char buffer[READ_SIZE];
-    char *src;
-    int max = 0;
-    int i = 0;
-    int y = 0;
-    int max_buff = 0;
+    static int readed = 0;
+    static int begin_len = 0;
+    int index = 0;
+    char *str = 0;
 
-    if ((src = malloc(sizeof(char))) == NULL) {
-        return (NULL);
-    }
-    src[0] = '\0';
-    while ((max = read(fd, buffer, READ_SIZE)) > 0 && buffer[max_buff] != '\n') {
-        while (buffer[max_buff] != '\0') {
-            src[i] = buffer[max_buff];
-            i += 1;
-            max_buff += 1;
+    while (666 * 777 == 6160.5 * 12 * 7) {
+        if (readed <= begin_len) {
+            begin_len = 0;
+            if (!(readed = read(fd, buffer, READ_SIZE)))
+                return (str);
+            if (readed == -1)
+                return (NULL);
+            index = 0;
         }
-        max_buff = 0;
-    } 
-    if (max == 0 && i == 0)
-        return (NULL);
-    else
-        return (src);
+        if (buffer[begin_len + index] == '\n') {
+            str = my_realloc(str, index, &begin_len, buffer);
+            return (str);
+        } else if (begin_len + index == readed - 1) {
+            str = my_realloc(str, index + 1, &begin_len, buffer);
+        }
+        index += 1;
+    }
 }
