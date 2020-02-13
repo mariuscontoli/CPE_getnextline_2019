@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2019
+** EPITECH PROJECT, 2020
 ** get_next_line.h
 ** File description:
-** header for get next line project
+** get next line header
 */
 
 #ifndef GET_NEXT_LINE_H_
@@ -10,16 +10,15 @@
 
 #define READ_SIZE (2)
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <string.h>
-#include <fcntl.h>
 
-char *re_alloc(char *str);
-char *get_next_line(int fd);
-int my_strlen(char const *str);
-int my_putstr(char const *str);
-void my_putchar(char c);
+char *get_next_line(const int fd);
+static char *my_realloc(char *str, int index, int *static_begin, char *buffer);
+char *my_strncpy(char *dest, char const *src, int n);
 
 #endif /* !GET_NEXT_LINE_H_ */
