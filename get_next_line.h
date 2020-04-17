@@ -1,4 +1,4 @@
-/0*
+/*
 ** EPITECH PROJECT, 2020
 ** get_next_line.h
 ** File description:
